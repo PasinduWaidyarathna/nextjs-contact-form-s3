@@ -8,12 +8,14 @@ import axios from "axios"
 interface FormData {
   name: string
   email: string
+  subject: string
   message: string
 }
 
 interface FormErrors {
   name?: string
   email?: string
+  subject?: string
   message?: string
 }
 
@@ -21,6 +23,7 @@ export default function ContactForm() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
+    subject: "",
     message: "",
   })
   const [errors, setErrors] = useState<FormErrors>({})
@@ -38,6 +41,10 @@ export default function ContactForm() {
       newErrors.email = "Email is required"
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
       newErrors.email = "Email is invalid"
+    }
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Subject is required"
     }
 
     if (!formData.message.trim()) {
@@ -73,7 +80,7 @@ export default function ContactForm() {
       console.log("Response:", response)
       if (response.status === 200) {
         setSubmitStatus("success")
-        setFormData({ name: "", email: "", message: "" })
+        setFormData({ name: "", email: "", subject: "", message: "" })
       } else {
         setSubmitStatus("error")
       }
@@ -134,6 +141,23 @@ export default function ContactForm() {
             }`}
           />
           {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+            Subject
+          </label>
+          <input
+            type="subject"
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 ${
+              errors.subject ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.subject && <p className="mt-1 text-sm text-red-600">{errors.subject}</p>}
         </div>
 
         <div className="mb-4">
